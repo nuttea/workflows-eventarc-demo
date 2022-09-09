@@ -25,7 +25,8 @@ data "archive_file" "archive" {
 }
 
 resource "google_storage_bucket_object" "object" {
-  name   = "${local.function_name}-function-source.zip" # format("%s-%s.zip", local.function_name, data.archive_file.archive.output_md5)
+#  name   = "${local.function_name}-function-source.zip" # 
+  name   = format("%s-%s.zip", local.function_name, data.archive_file.archive.output_md5)
   bucket = google_storage_bucket.bucket.name
   source = data.archive_file.archive.output_path  # Add path to the zipped function source code
 }
@@ -50,11 +51,5 @@ resource "google_cloudfunctions2_function" "function" {
     max_instance_count  = 1
     available_memory    = "256M"
     timeout_seconds     = 60
-  }
-
-  lifecycle {
-    replace_triggered_by  = [
-      google_storage_bucket_object.object
-    ]
   }
 }
