@@ -163,8 +163,9 @@ Deploy workflow:
 ```sh
 WORKFLOW_NAME=event-payload-workflow
 gcloud workflows deploy ${WORKFLOW_NAME} \
-    --source=workflow.yaml \
-    --service-account=${WORKFLOW_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
+    --source=workflows/workflow.yaml \
+    --service-account=${WORKFLOW_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com \
+    --location=asia-southeast1
 ```
 
 ## Trigger a Workflow with PubSub
@@ -210,7 +211,7 @@ BUCKET=$PROJECT_ID-workflow
 gsutil mb -l $REGION gs://$BUCKET
 
 echo "Create an Eventarc trigger to listen for events from a Cloud Storage bucket and route to $WORKFLOW_NAME workflow"
-TRIGGER_NAME=$WORKFLOW_NAME-storage
+GCS_TRIGGER_NAME=$WORKFLOW_NAME-storage
 gcloud eventarc triggers create $GCS_TRIGGER_NAME \
   --location=$REGION \
   --destination-workflow=$WORKFLOW_NAME \

@@ -37,10 +37,20 @@ module "project-services" {
 #  uniform_bucket_level_access = true
 #}
 
+# Prepare workflow.yaml to add an extra escape '$' for variables to be able to support terraform workflows deployment
+resource "null_resource" "add_escape" {
+  provisioner "local-exec" {
+    command = "sed 's/\\$/\\$\\$/g' ${path.cwd}/workflows/workflow.yaml > ${path.cwd}/workflows/workflow.yaml.tpl"
+  }
+}
+
 module "main-workflow" {
   source        = "./modules/gcp-workflows-trigger-gcs"
   workflow_name = var.workflow_name
   project_id    = var.project_id
+  workflow_base64_yaml = filebase64("${path.cwd}/workflows/workflow.yaml.tpl")
+
+  depends_on = [null_resource.add_escape]
 }
 
 module "randomgen" {
