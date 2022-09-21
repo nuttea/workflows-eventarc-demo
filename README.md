@@ -48,7 +48,7 @@ Inside [randomgen](randomgen) folder, deploy a function that generates a random 
 cd ${WORKING_DIR}/randomgen
 gcloud functions deploy randomgen \
     --gen2 \
-    --runtime python39 \
+    --runtime nodejs16 \
     --trigger-http \
     --entry-point randomgen \
     --source . \
