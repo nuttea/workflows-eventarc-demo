@@ -30,5 +30,11 @@ resource "google_cloudfunctions2_function" "function" {
     max_instance_count  = 1
     available_memory    = "256M"
     timeout_seconds     = 60
+    environment_variables = {
+        SERVICE_CONFIG_TEST = "config_test"
+    }
+    ingress_settings = "ALLOW_INTERNAL_ONLY"
+    all_traffic_on_latest_revision = true
+    service_account_email = var.function_service_account_email
   }
 }

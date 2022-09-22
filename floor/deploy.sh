@@ -1,7 +1,9 @@
 #!/bin/bash
 
-export SERVICE_NAME=floor
-gcloud run deploy ${SERVICE_NAME} \
-  --source . \
-  --platform managed \
-  --no-allow-unauthenticated
+gcloud functions deploy floor \
+  --runtime python39 \
+  --entry-point=floor \ 
+  --trigger-http \ 
+  --no-allow-unauthenticated \
+  --gen2 \
+  --region asia-southeast1

@@ -1,7 +1,7 @@
 # Create a service account for Workflows
 resource "google_service_account" "workflows_service_account" {
-  account_id   = var.workflow_sa
-  display_name = "Workflows Service Account"
+  account_id   = "${var.workflow_name}-workflow-sa"
+  display_name = "Workflows Service Account for ${var.workflow_name} workflow"
 }
 
 resource "google_project_iam_member" "workflows_service_account_roles" {

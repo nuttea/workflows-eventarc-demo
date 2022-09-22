@@ -98,17 +98,19 @@ curl https://api.mathjs.org/v4/?expr=log(56)
 
 ## Cloud Run - Floor
 
-Inside [floor](floor) folder, deploy an authenticated Cloud Run service that floors a number.
+Inside [floor](floor) folder, deploy an authenticated Cloud Function service that floors a number.
 
 Deploy:
 
 ```sh
 cd ${WORKING_DIR}/floor
-export SERVICE_NAME=floor
-gcloud run deploy ${SERVICE_NAME} \
-  --source . \
-  --platform managed \
-  --no-allow-unauthenticated
+gcloud functions deploy floor \
+  --runtime python39 \
+  --entry-point=floor \ 
+  --trigger-http \ 
+  --no-allow-unauthenticated \
+  --gen2 \
+  --region asia-southeast1
 ```
 
 Add Cloud Run Invoker permission to your current account before the test:

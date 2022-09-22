@@ -18,3 +18,8 @@ variable "gcf_source_bucket" {
   description = "The GCS Bucket for Cloud Functions source archive upload."
   type        = string
 }
+
+variable "function_service_account_email" {
+  description = "The Cloud Function Service Account Email"
+  type        = string
+}
