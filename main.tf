@@ -19,7 +19,8 @@ module "project-services" {
     "storage.googleapis.com",
     "containerregistry.googleapis.com",
     "artifactregistry.googleapis.com",
-    "workflows.googleapis.com"
+    "workflows.googleapis.com",
+    "secretmanager.googleapis.com"
   ]
 
   disable_dependent_services = false
@@ -28,18 +29,18 @@ module "project-services" {
 
 # Pre-requiste to have a GCS Bucket name with format "<project-id>-gcf-source"
 resource "google_storage_bucket" "bucket" {
-  name     = "${var.project_id}-${var.workflow_name}-gcf-source"  # Every bucket name must be globally unique
+  name     = "${var.project_id}-${var.workflow_group_name}-gcf-source"  # Every bucket name must be globally unique
   location = "${var.region}"
   uniform_bucket_level_access = true
 }
 
 # Service Account for Functions
 resource "google_service_account" "function_service_account" {
-  account_id = "${var.workflow_name}-function-sa"
-  display_name = "Service Account for Cloud Function in ${var.workflow_name} workflow"
+  account_id = "${var.workflow_group_name}-function-sa"
+  display_name = "Service Account for Cloud Function in ${var.workflow_group_name} workflow"
 }
 
-resource "google_project_iam_member" "gke1_service_account_roles" {
+resource "google_project_iam_member" "function_service_account_roles" {
   project  = "${var.project_id}"
   member   = format("serviceAccount:%s", google_service_account.function_service_account.email)
   for_each = toset([
@@ -52,12 +53,26 @@ resource "google_project_iam_member" "gke1_service_account_roles" {
   role     = each.key
 }
 
+# A secret in Secret Manager for reference as a generated hash in Cloud Funtions/Cloud Run URL
+resource "google_secret_manager_secret" "gcf-url-secret" {
+  secret_id     = "gcf-url-secret"
+
+  replication {
+    automatic = true
+  }
+
+  depends_on = [ module.project-services ]
+}
+
+resource "google_secret_manager_secret_version" "gcf-url-secret-version" {
+  secret        = google_secret_manager_secret.gcf-url-secret.id
+  secret_data   = "eximi56q2q"
+}
 
 # Workflows and Functions modules
-module "main-workflow" {
-  source        = "./modules/gcp-workflows-trigger-gcs"
-  workflow_name = var.workflow_name
-  project_id    = var.project_id
+module "myworkflow" {
+  source        = "./modules/gcp-workflows"
+  workflow_name = "myworkflow"
 }
 
 module "randomgen" {

@@ -9,19 +9,7 @@ variable "region" {
   type        = string
 }
 
-variable "runtime" {
-  description = "The runtime of the function."
-  default     = "nodejs16"
-  type        = string
-}
-
-variable "workflow_name" {
-  description = "The unique name to identify the function."
-  type        = string
-}
-
-variable "workflow_sa" {
-  description = "The service account for a workflow."
-  default     = "workflow-sa"
+variable "workflow_group_name" {
+  description = "The unique name to identify the group of workflows and functions."
   type        = string
 }

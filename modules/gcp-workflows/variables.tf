@@ -4,12 +4,7 @@ variable "region" {
   type        = string
 }
 
-variable "project_id" {
-  description = "The project in which the resource belongs."
-  type        = string
-}
-
 variable "workflow_name" {
-  description = "The unique name to identify the function."
+  description = "The unique name to identify the workflow."
   type        = string
 }

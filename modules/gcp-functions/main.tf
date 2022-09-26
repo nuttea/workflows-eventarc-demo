@@ -27,6 +27,7 @@ resource "google_cloudfunctions2_function" "function" {
   }
 
   service_config {
+    min_instance_count  = 0
     max_instance_count  = 1
     available_memory    = "256M"
     timeout_seconds     = 60
@@ -34,6 +35,8 @@ resource "google_cloudfunctions2_function" "function" {
         SERVICE_CONFIG_TEST = "config_test"
     }
     ingress_settings = "ALLOW_INTERNAL_ONLY"
+    #vpc_connector      = "" # The Serverless VPC Access connector name for Serverless to send Egress traffic to a VPC
+    #vpc_connector_egress_settings = "ALL_TRAFFIC"
     all_traffic_on_latest_revision = true
     service_account_email = var.function_service_account_email
   }
