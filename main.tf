@@ -46,7 +46,6 @@ resource "google_project_iam_member" "function_service_account_roles" {
   for_each = toset([
     "roles/monitoring.metricWriter",
     "roles/logging.logWriter",
-    "roles/stackdriver.resourceMetadata.writer",
     "roles/cloudfunctions.invoker",
     "roles/run.invoker"
   ])
